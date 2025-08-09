@@ -5,17 +5,12 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const zigcli_dep = b.dependency("cli", .{ .target = target });
-    const zigcli_mod = zigcli_dep.module("cli");
-
     const exe = b.addExecutable(.{
         .name = "zwallshuffle",
         .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
     });
-
-    exe.root_module.addImport("cli", zigcli_mod);
 
     b.installArtifact(exe);
 
