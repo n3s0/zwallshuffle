@@ -36,10 +36,6 @@
     // Once all dependencies are fetched, `zig build` no longer requires
     // internet connectivity.
     .dependencies = .{
-        .cli = .{
-            .url = "git+https://github.com/sam701/zig-cli#bdaab80c0f24624cb4e8b80bb7b34957263f67b8",
-            .hash = "cli-0.9.0-2eKe_zUBAQAuGjFuolxsm2SkNyuMVqk4SaYrwzis5jTp",
-        },
     },
     .paths = .{
         "build.zig",
