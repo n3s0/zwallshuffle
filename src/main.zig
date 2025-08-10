@@ -6,13 +6,31 @@ const filesystem = @import("filesystem.zig");
 
 
 pub fn main() !void {
-    var args = std.process.args();
-    while (args.next()) |arg_slice| {
-        const arg = std.mem.sliceToOwnedCstr(arg_slice, std.heap.page_allocator);
-        defer arg.deinit(); // Free allocated memory
+    const stdout = std.io.getStdOut().writer();
 
-        std.debug.print("Argument: {s}\n", .{arg.ptr});
-        // Implement parsing logic here (e.g., check for flags, options)
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
+
+    const args = try std.process.argsAlloc(allocator);
+    defer std.process.argsFree(allocator, args);
+
+    for (args[1..]) |arg| {
+        if (std.mem.eql(u8, arg, "-h") or std.mem.eql(u8, arg, "--help")) {
+            try commands.help();
+            return;
+        } else if (std.mem.eql(u8, arg, "-v") or std.mem.eql(u8, arg, "--version")) {
+            try commands.version();
+            return;
+        } else if (std.mem.eql(u8, arg, "-p") or std.mem.eql(u8, arg, "--path")) {
+            const path = args[2];
+                        
+            try stdout.print("Current path is: {s}\n", .{path});
+            
+            return;
+        } else {
+            try commands.help();
+            return;
+        } 
     }
-    
 }
